@@ -6,6 +6,20 @@
     <groupId>jpa-basic</groupId>
     <artifactId>ex1-hello-jpa</artifactId>
     <version>1.0.0</version>
+    <!-- main method 실행 시 Error(release version 5 not supported) 발생함에 따라 설정 <build> 추가 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <!-- JPA 하이버네이트(hibernate.org)
         1) 설정방법 : 라이브러리 버전을 설정할 때, (spring.io)사이트에서 참조하여
