@@ -5,10 +5,12 @@ import javax.persistence.Id;
 
 /** table과 mapping할 Entity 객체 */
 @Entity // JPA가 관리해야 하는 애라고 인식
+//@Table(name = "USER") 테이블 이름이 Member가 아니라 USER일 경우 해당 데코레이터로 매핑
 public class Member {
 
     @Id // PK
     private Long id;
+    //@Column(name = "username") DB 컬럼명이 name이 아닌 username일 경우 해당 데코레이터로 매핑
     private String name;
 
     public Long getId() {
