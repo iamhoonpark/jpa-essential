@@ -16,17 +16,26 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
-        // EntityManager를 꺼내고 실제 동작하는 코드를 작성하는 부분(CRUD)
-        Member member = new Member();
-        member.setId(2L);
-        member.setName("HelloB");
-        // Insert
-        em.persist(member);
+        // 문제가 발생 시, em, emf가 호출이 안될 수 있음 따라서 try~catch 구문
+        try {
+            // EntityManager를 꺼내고 실제 동작하는 코드를 작성하는 부분(CRUD)
+            Member member = new Member();
+            member.setId(2L);
+            member.setName("HelloB");
+            // Insert
+            em.persist(member);
+            // 정상일 때 commit
+            tx.commit();
+        } catch (Exception e) {
+            // 문제가 생기면 rollback
+            tx.rollback();
+        } finally {
+            // 작업이 다 끝나면 entity manager가 닫아줌
+            // 내부적으로 Data Connection을 물고 동작하기 때문에 사용 후 꼭 닫아줘야 함
+            em.close();
+        }
 
-        tx.commit();
-
-        // 종료
-        em.close();
+        // 전체 애플리케이션이 끝나면 emf도 종료
         emf.close();
     }
 
