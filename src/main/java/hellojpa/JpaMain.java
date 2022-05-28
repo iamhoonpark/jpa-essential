@@ -18,12 +18,12 @@ public class JpaMain {
 
         // 문제가 발생 시, em, emf가 호출이 안될 수 있음 따라서 try~catch 구문
         try {
-            // EntityManager를 꺼내고 실제 동작하는 코드를 작성하는 부분(CRUD)
-            Member member = new Member();
-            member.setId(2L);
-            member.setName("HelloB");
-            // Insert
-            em.persist(member);
+            // 1번에 대한 데이터를 조회(SELECT)
+            // EntityManager : java collect 같은 역할로 객체를 대신 저장해줌
+            Member findMember = em.find(Member.class, 1L);
+            System.out.println("findMember.id = " + findMember.getId());
+            System.out.println("findMember.name = " + findMember.getName());
+
             // 정상일 때 commit
             tx.commit();
         } catch (Exception e) {
