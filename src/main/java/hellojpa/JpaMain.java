@@ -53,5 +53,17 @@ public class JpaMain {
  *     name varchar(255),
  *     primary key (id)
  * );
- * */
+ */
+
+/**
+ * 주의 사항
+ * 1) Entity Manager Factory
+ * - Web Application Service 를 운영한다고 했을 때, Web-Server가 올라 오는 시점에 DB당 딱 하나만 생성이 되고 Entity Manager는
+ * 2) Entity Manager
+ * - 고객의 요청이 올 때마다 계속 썼다가(CRUD), 버렸다가(em.close()) 반복
+ * - 따라서 Entity Mangager는 쓰레드 간에 공유를 하면 안 됨(사용하고 버려야 함)
+ *   하나를 만들어서 여러 쓰레드에서 같이 사용하면 장애가 발생함
+ *   DB 커넥션을 빨리 쓰고 돌려주는 것 처럼
+ * 3) JPA의 모든 데이터 변경은 트랜잭션 안에서 실행
+ */
 
