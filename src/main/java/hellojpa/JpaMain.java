@@ -30,6 +30,7 @@ public class JpaMain {
                     .setFirstResult(1) // 1번 데이터 부터
                     .setMaxResults(5)  // 5개의 데이터를 호출
                     .getResultList();
+                    // DB 방언, persistence.xml 에서 Oracle로 설정 후 실행할 경우 rownum으로 sql이 실행
             /**
              * createQuery의 sql문을 보면 기존 sql문과 조금 다름
              * JPA 입장에서는 코드를 짤 때, 테이블 대상으로 코드를 짜지 않고,
