@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
 
@@ -18,16 +19,22 @@ public class JpaMain {
 
         // 문제가 발생 시, em, emf가 호출이 안될 수 있음 따라서 try~catch 구문
         try {
-            // 1번에 대한 데이터를 수정(UPDATE) : em.remove(1L);
-            Member findMember = em.find(Member.class, 1L);
 
-            // em.persist(findMember)으로 저장하는 것이 아님
-            // 자바컬렉션과 같이 다루는 것처럼 설계되어 있어서 그럼
-            // 자바 객체에서 값만 바꾸었는데 수정이 가능
-            // JPA를 통해서 Entity를 가져오면 JPA가 관리를 하고,
-            // 변경이 되었는지 안 되었는지 트랜잭션을 커밋하는 시점에 체크를 함
-            // 무언가 변경 된걸 감지하고 UPDATE 쿼리를 실행하고 트랜잭션이 커밋됨
-            findMember.setName("HelloJPA");
+            /**
+             * JPQL
+             * 가장 단순한 조회는 entity manager를 통해 find 메서드 인자에 type과 pk값을 넣으면 단건조회가 쉽게 이루어지나,
+             * 단건 조회가 아닌 리스트 조회, 조인 즉 내가 원하는 데이터를 최적화해서 가져오기 위해 필요한 것
+             * */
+            List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
+            /**
+             * createQuery의 sql문을 보면 기존 sql문과 조금 다름
+             * JPA 입장에서는 코드를 짤 때, 테이블 대상으로 코드를 짜지 않고,
+             * Member 객체(entity)를 대상으로 쿼리를 작성.
+             * 따라서, JPA의 대상은 테이블이 아닌 객체
+             * */
+            for (Member member : result ) {
+                System.out.println("member = " + member.getId() + ", " + member.getName());
+            }
 
             // 정상일 때 commit
             tx.commit();
