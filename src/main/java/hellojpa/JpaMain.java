@@ -25,7 +25,11 @@ public class JpaMain {
              * 가장 단순한 조회는 entity manager를 통해 find 메서드 인자에 type과 pk값을 넣으면 단건조회가 쉽게 이루어지나,
              * 단건 조회가 아닌 리스트 조회, 조인 즉 내가 원하는 데이터를 최적화해서 가져오기 위해 필요한 것
              * */
-            List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
+            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+                    // 페이지네이션 해당 메서드를 선언하여 실행할 경우 limit과 offset이 자동 반영
+                    .setFirstResult(1) // 1번 데이터 부터
+                    .setMaxResults(5)  // 5개의 데이터를 호출
+                    .getResultList();
             /**
              * createQuery의 sql문을 보면 기존 sql문과 조금 다름
              * JPA 입장에서는 코드를 짤 때, 테이블 대상으로 코드를 짜지 않고,
