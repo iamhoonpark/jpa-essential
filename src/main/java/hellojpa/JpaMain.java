@@ -18,11 +18,11 @@ public class JpaMain {
 
         // 문제가 발생 시, em, emf가 호출이 안될 수 있음 따라서 try~catch 구문
         try {
-            // 1번에 대한 데이터를 조회(SELECT)
-            // EntityManager : java collect 같은 역할로 객체를 대신 저장해줌
+            // 1번에 대한 데이터를 삭제(DELETE) : em.remove(1L);
             Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember.id = " + findMember.getId());
-            System.out.println("findMember.name = " + findMember.getName());
+
+            //찾은 객체를 remove메서드에 인자로 넣음
+            em.remove(findMember);
 
             // 정상일 때 commit
             tx.commit();
