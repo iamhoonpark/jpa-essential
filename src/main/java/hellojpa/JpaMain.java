@@ -18,11 +18,16 @@ public class JpaMain {
 
         // 문제가 발생 시, em, emf가 호출이 안될 수 있음 따라서 try~catch 구문
         try {
-            // 1번에 대한 데이터를 삭제(DELETE) : em.remove(1L);
+            // 1번에 대한 데이터를 수정(UPDATE) : em.remove(1L);
             Member findMember = em.find(Member.class, 1L);
 
-            //찾은 객체를 remove메서드에 인자로 넣음
-            em.remove(findMember);
+            // em.persist(findMember)으로 저장하는 것이 아님
+            // 자바컬렉션과 같이 다루는 것처럼 설계되어 있어서 그럼
+            // 자바 객체에서 값만 바꾸었는데 수정이 가능
+            // JPA를 통해서 Entity를 가져오면 JPA가 관리를 하고,
+            // 변경이 되었는지 안 되었는지 트랜잭션을 커밋하는 시점에 체크를 함
+            // 무언가 변경 된걸 감지하고 UPDATE 쿼리를 실행하고 트랜잭션이 커밋됨
+            findMember.setName("HelloJPA");
 
             // 정상일 때 commit
             tx.commit();
