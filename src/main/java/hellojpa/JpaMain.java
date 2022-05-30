@@ -95,8 +95,6 @@ public class JpaMain {
  * 4) JPQL을 한마디로 정의하면 객체 지향 SQL
  */
 
-// 22-05-29 : H2 DB 사용법, JPA 라이브러리 세팅, persistence.xml 에 대해, EntityManagerFactory(DB당 1개),
-
 /**
  * 22-05-29
  * 1) H2 DB 사용
