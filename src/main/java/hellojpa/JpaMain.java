@@ -20,27 +20,21 @@ public class JpaMain {
         // 문제가 발생 시, em, emf가 호출이 안될 수 있음 따라서 try~catch 구문
         try {
 
-            /**
-             * JPQL
-             * 가장 단순한 조회는 entity manager를 통해 find 메서드 인자에 type과 pk값을 넣으면 단건조회가 쉽게 이루어지나,
-             * 단건 조회가 아닌 리스트 조회, 조인 즉 내가 원하는 데이터를 최적화해서 가져오기 위해 필요한 것
-             * */
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    // 페이지네이션 해당 메서드를 선언하여 실행할 경우 limit과 offset이 자동 반영
-                    .setFirstResult(1) // 1번 데이터 부터
-                    .setMaxResults(5)  // 5개의 데이터를 호출
-                    .getResultList();
-            /**
-             * createQuery의 sql문을 보면 기존 sql문과 조금 다름
-             * JPA 입장에서는 코드를 짤 때, 테이블 대상으로 코드를 짜지 않고,
-             * Member 객체(entity)를 대상으로 쿼리를 작성.
-             * 따라서, JPA의 대상은 테이블이 아닌 객체
-             * */
-            for (Member member : result ) {
-                System.out.println("member = " + member.getId() + ", " + member.getName());
-            }
+            /** 비영속 상태 : 아무것도 아닌 상태 = 객체를 생성 및 set
+             * JPA와 아무 관련 없는 상태로 DB에 들어가지 않음 */
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            // 정상일 때 commit
+            /** 영속 상태 : EntityManager 안에 있는 영속성 컨텍스트
+             * 라는 애를 통해 이 member가 관리가 되어짐 */
+            // 해당 메서드를 실행해보면, Query는 BEFORE와 AFTER 사이에 실행되지 않음
+            System.out.println("------------BEFORE------------");
+            em.persist(member); // 객체를 저장한 상태(영속)
+            System.out.println("-------------AFTER------------");
+            // 이 곳에서 INSERT QUERY가 실행됨
+            /** 즉, 영속상태가 된다고 해서 바로 DB에 QUERY가 날라가지 않고
+             * transaction을 commit하는 시점에 영속성 컨텍스트에 있는 애가 DB에 QUERY가 날라감 */
             tx.commit();
         } catch (Exception e) {
             // 문제가 생기면 rollback
