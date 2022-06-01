@@ -6,6 +6,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
 
+/** 1. 객체와 관계형 데이터베이스 매핑하기(ORM)  */
+
 public class JpaMain {
 
     public static void main(String[] args) {
