@@ -46,8 +46,8 @@ public class PersistenceContext {
    ·사실 persist 메서드는 DB에 저장하는 것이 아닌 entity를 영속성 컨텍스트에 저장한다는 뜻
   - 영속성 컨텍스트는 논리적인 개념으로 눈에 보이지 않음
   - 엔티티 매니저를 통해서 영속성 컨텍스트에 접근
-  - (J2SE환경) EntityManager를 생성하면 그 안에 1:1로 persistenceContext 가 생성됨
-  - (J2EE, 스프링프레임워크 같은 컨테이너 환경) EntityManager가 N:1로 여러 em에서 하나의 persistenceContext를 쳐다보는 환경
+  - (J2SE: 기본적인 java만 사용한 환경) EntityManager를 생성하면 그 안에 1:1로 persistenceContext 가 생성됨
+  - (J2EE: 스프링프레임워크 같은 컨테이너 환경) EntityManager가 N:1로 여러 em에서 하나의 persistenceContext를 쳐다보는 환경
 
  ** 2. 엔티티의 생명주기
   1) 비영속(new/transient)
