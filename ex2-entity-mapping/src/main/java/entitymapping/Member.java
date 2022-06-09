@@ -67,9 +67,18 @@ public class Member {
    - 기타 속성 :catalog, schema, uniqueConstraints(DDL)
 
    4. 데이터베이스 스키마 자동 생성
-   - JPA는 애플리케이션 로딩 시점에 Create문으로 DB 테이블을 미리 생성하고 시작 가능
+   - JPA는 객체 매핑을 다 해놓으면 애플리케이션이 실행 될 때(로딩 시점), Create문으로 DB 테이블을 다 만들어주고 시작 가능
     · 장점: 개발할 때, 테이블을 생성하고 객체(Entity)를 생성하지만, JPA는 객체 매핑을 다 해놓으면,
       애플리케이션 뜰 때, 테이블을 자동으로 다 생성해줌
-   - 데이터베이스 방언을 활용해서 DB에 맞는 적절한 DDL을 생성
-
+   - 데이터베이스 방언을 활용해서 DataBase에 맞는 적절한 DDL을 생성
+    ex) oracle: varchar2 = mySQL: varcar
+   - <property name="hibernate.hbm2ddl.auto" value="create" /> 해당 설정을 persistence.xml에 선언 후 서버 run
+    · value="creat" 이 외의 옵션
+    1) create : 기존테이블 삭제 후 다시 생성(DROP > CREATE)
+    2) create-drop : create와 같으나 종료시점에 테이블 DROP
+    3) update : 변경분만 반영(운영 DB에는 사용하면 안됨)
+    4) validate : 엔티티와 테이블이 정상 매핑되었는지만 확인
+    5) none : 사용하지 않음 
+   - 주의사항 이렇게 생성된 DDL은 반드시 개발장비에서만
+    · 운영서버에서 필요한 경우, 생성된 DDL은 불안할 수 있기 때문 적절히 다듬은 후에 사용하는 것을 권장
  */
