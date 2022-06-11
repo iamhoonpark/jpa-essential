@@ -75,7 +75,8 @@ public class Member {
    - <property name="hibernate.hbm2ddl.auto" value="create" /> 해당 설정을 persistence.xml에 선언 후 서버 run
     · value="creat" 이 외의 옵션
     1) create : 기존테이블 삭제 후 다시 생성(DROP > CREATE)
-    2) create-drop : create와 같으나 종료시점에 테이블 DROP
+    2) create-drop : create와 같으나 애플리케이션 종료시점에 테이블 DROP
+     · 테스트 케이스 때, 실험해보고 날리고 싶을 때 주로 사용
     3) update : 변경분만 반영(운영 DB에는 사용하면 안됨)
     4) validate : 엔티티와 테이블이 정상 매핑되었는지만 확인
     5) none : 사용하지 않음 
