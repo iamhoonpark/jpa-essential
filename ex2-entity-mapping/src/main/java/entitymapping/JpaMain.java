@@ -21,10 +21,11 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
+            // DDL 하고 싶을 땐 sql관련 작성 구문이 없어야 함
+            /** List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
             for (Member member : result ) {
                 System.out.println("member = " + member.getId() + ", " + member.getName());
-            }
+            } */
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
