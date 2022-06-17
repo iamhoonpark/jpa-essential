@@ -1,5 +1,6 @@
 package entitymapping;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -10,7 +11,11 @@ public class Member {
 
     @Id
     private Long id;
+
+    // unique 여부 ture, 글자수(varchar) 10
+    @Column(unique = true, length = 10)
     private String name;
+
     private int age;
 
     public Member() {
@@ -61,7 +66,7 @@ public class Member {
      · 기본 값은 클래스 명과 동일하게 설정이 됨 ex) @Entity(name="Member")
      · JPA가 내부적으로 구분하는 이름
     - 같은 클래스 이름이 없으면 가급적 기본값을 사용하여 유지
-    
+
    3. @Table
    - 엔티티와 매핑할 테이블을 지정
    - name : 매핑할 테이블 이름을 지정, 기본값은 엔티티명
@@ -80,7 +85,21 @@ public class Member {
      · 테스트 케이스 때, 실험해보고 날리고 싶을 때 주로 사용
     3) update : 변경분만 반영(운영 DB에는 사용하면 안됨)
     4) validate : 엔티티와 테이블이 정상 매핑되었는지만 확인
-    5) none : 사용하지 않음 
+    5) none : 사용하지 않음
    - 주의사항 이렇게 생성된 DDL은 반드시 개발장비에서만
     · 운영서버에서 필요한 경우, 생성된 DDL은 불안할 수 있기 때문 적절히 다듬은 후에 사용하는 것을 권장
+
+   5. 데이터베이스 스키마 자동 생성 - 주의사항
+   - 운영 장비에는 절대 create, create-drop, update 사용하면 안 됨
+   - 개발 초기 단계는 create 또는 update
+   - 테스트 서버(여러 명의 개발자가 함께 사용하는 중간 서버 격)에는 update 또는 validate
+   - 스테이징과 운영 서버는 validate 또는 none
+
+   6. DDL 생성 기능
+   - 제약조건 추가 : 회원 이름은 필수, 10자 초과 X
+    ex) @Column(nullable = false, length = 10)
+   - 유니크 제약조건 추가
+    ex) @Table(uniqueConstraints = {@UniqueConstraint(name = "NAME_AGE_UNIQUE", columnNames={"NAME", "AGE"})})
+   - DDL 생성 기능은 DDL을 자동 생성할 때만 사용되고 JPA의 실행 로직에는 영향을 주지 않음
+    · 즉 애플리케이션(JPA 실행 매커니즘)에 영향을 주지 않고 DB에만 영향을 줌
  */
