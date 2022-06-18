@@ -26,6 +26,13 @@ public class JpaMain {
             for (Member member : result ) {
                 System.out.println("member = " + member.getId() + ", " + member.getName());
             } */
+
+            Member member = new Member();
+            member.setId(1L);
+            member.setUsername("Jake");
+            member.setRoleType(RoleType.ADMIN);
+
+            em.persist(member);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
