@@ -220,16 +220,48 @@ public class Member {
     1. 기본 키 매핑 어노테이션
     ※ ex: @Id @GeneratedValue(strategy = GenerationType.AUTO)
           private Long id;
-    1) @Id
-     - 집접 할당: @Id 만 사용
-    2) @GeneratedValue
-     - 자동 생성
-      ① AUTO: 방언에 따라 자동 지정, 기본값
-      ② SEQUENCE: 데이터베이스 시퀀스 오브젝트 사용, ORACLE
+    1) 직접 할당
+     - @Id 만 사용
+    2) 자동 생성 할당
+     - @GeneratedValue
+      ① AUTO: DB 방언에 따라 자동 지정, 기본값
+       · TABLE, SEQUENCE, IDENTITY 셋 중 하나 선택 됨
+      ② SEQUENCE: 데이터베이스 시퀀스 오브젝트 사용
+       · 주로 ORACLE 에서 사용
+       · 그러나, 난.. POSCO ICT 출입관리통합시스템 구축 플젝에서 PostgresQL을 사용해서 시퀀스를 만든 후 해당 전략(strategy)를 사용해서 개발했음
        · @SequenceGenerator 필요
-      ③ IDENTITY: 데이터베이스에 위임, MYSQL
+      ③ IDENTITY: 기본 키 생성을 데이터베이스에 위임
+       · JPA : '나는 모르겠고 DB야 니가 알아서 해줘'
+       · MySQL의 경우 AUTO_INCREMENT 가 실행 됨
+       · 주로 MySQL, PostgresQL, SQL Server, DB2에서 사용
       ④ TABLE: 키 생성용 테이블 사용, 모든 DB에서 사용
        · @TableGenerator 필요
+    3) SEQUENCE strategy
+     - Ex:
+        @Entity
+        @SequenceGenerator( name = “MEMBER_SEQ_GENERATOR",
+                            sequenceName = “MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+                            initialValue = 1, // DDL 생성할 때 처음 1로 시작
+                            allocationSize = 1 ) // DB 시퀀스 값이 하나씩 증가하도록 설정되어 있으면 이 값을 반드시 1로 설정해야 함
+        public class Member {
+            @Id
+            @GeneratedValue(strategy = GenerationType.SEQUENCE,
+                            generator = "MEMBER_SEQ_GENERATOR")
+            private Long id;
+    4) TABLE strategy
+     - 키 생성 전용 테이블을 하나 만들어서 DB 시퀀스를 흉내내는 전략(잘안씀)
+     - 장점: 모든 DB에서 적용 가능
+     - 단점: 테이블을 직접 사용하다보니 성능이 떨어짐. 숫자 뽑는 시퀀스와 다르게 그것에 대한 최적화가 되어 있지 않음
+
+    2. 권장하는 식별자 전략
+    - 기본키 제약 조건: not null, 유일, 변하면 안 됨
+    - 미래까지 이 조건을 만족하는 자연키는 찾기 어려우니 대리키(대체키)를 사용
+    - 예를 들어 주민등록번호다 기본 키로 적절하지 않음
+    - 권장: Long형 + 대체키 + 키 생성전략 사용
+     
+     
+     ++ 1, 2 전략 추가 필기해놓기
+
 
 
 Ⅴ. 실제 예제 1 - 요구사항 분석과 기본 매핑
