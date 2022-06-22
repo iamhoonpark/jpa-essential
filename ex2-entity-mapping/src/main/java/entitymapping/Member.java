@@ -183,6 +183,7 @@ public class Member {
    - DDL 생성 기능은 DDL을 자동 생성할 때만 사용되고 JPA의 실행 로직에는 영향을 주지 않음
     · 즉 애플리케이션(JPA 실행 매커니즘)에 영향을 주지 않고 DB에만 영향을 줌
 
+
   Ⅲ. 필드와 컬럼 매핑
 
     1. 요구사항 추가
@@ -215,8 +216,21 @@ public class Member {
      - DB랑 관계없이 메모리에서만 계산하고 싶을 때
       · ex: @Transient private int temp;
 
+  Ⅳ. 기본 키 매핑
+    1. 기본 키 매핑 어노테이션
+    ※ ex: @Id @GeneratedValue(strategy = GenerationType.AUTO)
+          private Long id;
+    1) @Id
+     - 집접 할당: @Id 만 사용
+    2) @GeneratedValue
+     - 자동 생성
+      ① AUTO: 방언에 따라 자동 지정, 기본값
+      ② SEQUENCE: 데이터베이스 시퀀스 오브젝트 사용, ORACLE
+       · @SequenceGenerator 필요
+      ③ IDENTITY: 데이터베이스에 위임, MYSQL
+      ④ TABLE: 키 생성용 테이블 사용, 모든 DB에서 사용
+       · @TableGenerator 필요
 
 
-Ⅳ. 기본 키 매핑
 Ⅴ. 실제 예제 1 - 요구사항 분석과 기본 매핑
  */
