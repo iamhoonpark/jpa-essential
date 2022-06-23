@@ -236,7 +236,19 @@ public class Member {
        · 주로 MySQL, PostgresQL, SQL Server, DB2에서 사용
       ④ TABLE: 키 생성용 테이블 사용, 모든 DB에서 사용
        · @TableGenerator 필요
-    3) SEQUENCE strategy
+
+    2. 권장하는 식별자 전략
+    - 기본키 제약 조건: not null, 유일, 변하면 안 됨
+    - 미래까지 이 조건을 만족하는 자연키는 찾기 어려우니 대리키(대체키)를 사용
+    - 예를 들어 주민등록번호도 기본 키로 적절하지 않음
+    - 권장: Long형 + 대체키 + 키 생성전략(ex. uuid, 랜덤값 등) 사용
+
+    3. 전략(strategy)
+    1) TABLE
+     - 키 생성 전용 테이블을 하나 만들어서 DB 시퀀스를 흉내내는 전략(잘안씀)
+     - 장점: 모든 DB에서 적용 가능
+     - 단점: 테이블을 직접 사용하다보니 성능이 떨어짐. 숫자 뽑는 시퀀스와 다르게 그것에 대한 최적화가 되어 있지 않음
+    2) SEQUENCE
      - Ex:
         @Entity
         @SequenceGenerator( name = “MEMBER_SEQ_GENERATOR",
@@ -248,19 +260,22 @@ public class Member {
             @GeneratedValue(strategy = GenerationType.SEQUENCE,
                             generator = "MEMBER_SEQ_GENERATOR")
             private Long id;
-    4) TABLE strategy
-     - 키 생성 전용 테이블을 하나 만들어서 DB 시퀀스를 흉내내는 전략(잘안씀)
-     - 장점: 모든 DB에서 적용 가능
-     - 단점: 테이블을 직접 사용하다보니 성능이 떨어짐. 숫자 뽑는 시퀀스와 다르게 그것에 대한 최적화가 되어 있지 않음
+        }
+      ① em.persist(member) -> call next value for MEMEBER_SEQ = seq 오브젝트에서 다음 value 가져오라는 명령
+      ② DB에서 값을 가져온 후 Entity에 매핑되어 있는 컬럼으로 값을 저장
+      ③ 영속성 컨텍스트에 저장 -> tx.commit(); 때 insert query 실행
+     - allocationSize 의 기본값은 50
+      · em.persist(member1);
+        em.persist(member2);
+        em.persist(member3);
+      · call next value for SEQ 로 가져올 경우 어찌되었든 네트워크를 계속 타는 것이기 때문에 성능 문제가 생길 수 있어서
+       ＊ SQL 편집기 : call next value for MEMBER_SEQ
+      · allocationSize 로 미리 50개를 당겨와서 성능을 최적화 함
+      · 그래서, call value 할 때, 미리 DB에서 50개를 미리 쌓아놓고 개발자는 메모리에서 1개씩 사용함
+      · 50개를 쓸 경우 또 51번 부터 50개를 미리 쌓아놓음
+      · 동시성 문제 없이 다양한 문제를 해결할 수 있음
+     - 첫 호출 시 DB SEQ = 1, 두 번째 호출 시 DB SEQ = 51
 
-    2. 권장하는 식별자 전략
-    - 기본키 제약 조건: not null, 유일, 변하면 안 됨
-    - 미래까지 이 조건을 만족하는 자연키는 찾기 어려우니 대리키(대체키)를 사용
-    - 예를 들어 주민등록번호다 기본 키로 적절하지 않음
-    - 권장: Long형 + 대체키 + 키 생성전략 사용
-     
-     
-     ++ 1, 2 전략 추가 필기해놓기
 
 
 
