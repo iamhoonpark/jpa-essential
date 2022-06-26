@@ -275,7 +275,9 @@ public class Member {
       · 50개를 쓸 경우 또 51번 부터 50개를 미리 쌓아놓음
       · 동시성 문제 없이 다양한 문제를 해결할 수 있음
      - 첫 호출 시 DB SEQ = 1, 두 번째 호출 시 DB SEQ = 51
-
+      · em.persist(member1); // 1, 51(최적화)
+      · em.persist(member2); // DB에서 호출하지 않고 memory에서 호출
+      · em.persist(member3); // DB에서 호출하지 않고 memory에서 호출
 
 
 
