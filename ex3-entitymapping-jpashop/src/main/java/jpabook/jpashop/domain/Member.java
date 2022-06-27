@@ -2,6 +2,8 @@ package jpabook.jpashop.domain;
 
 import javax.persistence.*;
 
+// 보통 제약 조건을 Entity 객체에 선언해 놓는게 편리(length, uniqueConstraints 등)
+
 @Entity
 public class Member {
 
