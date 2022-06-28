@@ -11,8 +11,21 @@ public class Order {
     @Column(name = "ORDER_ID")
     private Long id;
 
+    // 누가 주문했는 지 알아야 하기 때문에 memberId
+    // 그러나 조금 잘 못 설계됨
+    // Member 객체가 필요함
     @Column(name = "MEMBER_ID")
-    private Long memberId; // 누가 주문했는 지 알아야 함
+    private Long memberId;
+
+    private Member member;
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
     private LocalDateTime oderDate;
 
