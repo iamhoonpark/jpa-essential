@@ -4,7 +4,6 @@ import javax.persistence.*;
 
 // 보통 제약 조건을 Entity 객체에 선언해 놓는게 개발하기에 편리
 // @Table(indexes = @Index()), 컬럼별 매핑, length, uniqueConstraints 등
-
 @Entity
 public class Member {
 
