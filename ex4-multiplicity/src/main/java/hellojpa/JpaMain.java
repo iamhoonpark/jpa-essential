@@ -4,49 +4,48 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
-
-/** 1. 객체와 관계형 데이터베이스 매핑하기(ORM)  */
 
 public class JpaMain {
 
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
-
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 
         try {
-            /* 현재 Member 테이블에 team_id를 그대로 가져온 상태(참조가 아닌 외래키 값을 그대로 가져옴)
-             * 객체를 테이블에 맞춰 모델링을 한 상태(=> 결과값 하단 주석내용 참조) 이 것의 문제점은 */
+            // 저장
             Team team = new Team();
             team.setName("TeamA");
-            em.persist(team); // id에 값이 들어감(영속상태가 되면 무조건 PK에 값이 세팅되고 영속상태 들어감)
+            em.persist(team);
 
             Member member = new Member();
             member.setName("member1");
-
-            // member1을 TeamA에 소속시키고 싶다면
-            // team에 id를 부여해야 함
-            member.setTeamId(team.getId());
+            // Jpa가 알아서 PK값을 꺼내서 저장할 때, FK를 사용
+            member.setTeam(team);
             em.persist(member);
 
-            // call next value for hibernate_sequence 시퀀스를 공용으로 사용하기에 teamId = 1, memberId = 2
+            /* flush
+            * em.flush(); 강제호출, 현재 영속성 컨텍스트에 있는 쿼리를 DB에 다 날려버려서 싱크를 맞춤
+            * em.clear(); 영속성 컨텍스트를 완전 초기화
+            * 결과 → insert 쿼리 두번 → select 쿼리(조인문) 한번 → sout 실행 → Hibernate 실행
+            * jpa가 member와 team을 join을 통해 한번에 가져옴 → 분리하고 싶다면 @ManyToOne(fetch설정) */
 
-            // 멤버의 Team을 알고 싶을 때
+            // 조회
             Member findMember = em.find(Member.class, member.getId());
-            Long findTeamId =  findMember.getTeamId();
-            Team findTeam = em.find(Team.class, findTeamId);
+            Team findTeamId = findMember.getTeam();
             
-            // 연관관계가 없기 때문에 위 작업 처럼 DB에서 계속 꺼낸 후에야 출력 가능
-            System.out.println("findTeam : " + findTeam);
+            // Q. 실행 시, 여기서 쿼리문이 발생하지 않는 이유
+            // A. 영속성 컨텍스트 때문에 → 1차캐시에서 가져옴
+            // 만약 쿼리문을 보고싶다? → flush 로 이동
+            
+            // 객체지향스럽게 레퍼런스들을 바로 가져올 수 있다.
+            System.out.println("findTeamId.getId() + \",\" + findTeamId.getName() = " + findTeamId.getId() + "," + findTeamId.getName());
 
-            /* 이 처럼 객체를 테이블에 맞추어 데이터 중심으로 모델링하면, 협력 관계를 만들 수 없다.
-               - 테이블: 외래 키로 조인을 사용해서 연관된 테이블을 찾는다.
-               - 객  체: 참조를 사용해서 연관된 객체를 찾는다.
-               - 즉, 테이블과 객체 사이에는 이런 큰 간격이 있다.
-               - 객체지향 모델링하는 방법 → Member */
+            /* 만약 찾은 멤버로 다른 팀으로 바꾸고 싶을 때,
+            * Team newTeam = em.find(Team.class, 100L);
+            * findTeamId.setTeam(newTeam); */
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -57,20 +56,3 @@ public class JpaMain {
     }
 
 }
-/*
-Hibernate:
-
-    create table Member (
-       MEMBER_ID bigint not null,
-        USER_NAME varchar(255),
-        TEAM_ID bigint,
-        primary key (MEMBER_ID)
-    )
-Hibernate:
-
-    create table Team (
-       TEAM_ID bigint not null,
-        name varchar(255),
-        primary key (TEAM_ID)
-    )
-*/

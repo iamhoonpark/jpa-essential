@@ -15,20 +15,25 @@ public class Member {
     @Column(name = "USER_NAME")
     private String name;
 
-    /* 객체지향 모델링 하는 방법
+    /* 기존 매핑
     @Column(name = "TEAM_ID")
     private Long teamId;
-    
-    Team 객체를 import 해도 error가 발생 JPA한테
-    해당 객체와 Member 객체가 무슨 사이(1:1, 1:N 등)인지 DB관점에서 알려줘야 함
-    1) @ManyToOne
+
+    객체지향 모델링 하는 방법
+    · Team 객체를 import 해도 error가 발생 JPA한테
+    · 해당 객체와 Member 객체가 무슨 사이(1:1, 1:N 등)인지 DB관점에서 알려줘야 함
+    1. 매핑 방법
+     1) @ManyToOne
+     - 관계설정
      - 어노테이션들은 DB 관점에서 바라보는 것
      - Member객체는 Many, Team객체는 One N:1
-    2) JoinColumn
+     2) JoinColumn
+     - 조인컬럼
      - Member객체의 team 레퍼런스와 Member테이블의 team_id FK와 매핑
-    3) 이렇게 했는데, Data Source 에러가 발생한다면,
-     - 인텔리제이에서 DB에 실제 해당 값이 있는지 체킹을 위해 에러 발생내는 것으로 무시해도 됨 */
-    @ManyToOne
+     3) 이렇게 했는데, Data Source 에러가 발생한다면,
+     - 인텔리제이에서 DB에 실제 해당 값이 있는지 체킹을 위해 에러 발생내는 것으로 무시해도 됨
+      → JpaMain */
+    @ManyToOne // (fetch = FetchType.LAZY) 지연로딩 전략으로 해당 옵션 설정 시 쿼리가 분리되어서 실행됨
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
