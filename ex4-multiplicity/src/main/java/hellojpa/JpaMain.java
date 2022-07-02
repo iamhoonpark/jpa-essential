@@ -42,6 +42,11 @@ public class JpaMain {
             // 연관관계가 없기 때문에 위 작업 처럼 DB에서 계속 꺼낸 후에야 출력 가능
             System.out.println("findTeam : " + findTeam);
 
+            /* 이 처럼 객체를 테이블에 맞추어 데이터 중심으로 모델링하면, 협력 관계를 만들 수 없다.
+               - 테이블: 외래 키로 조인을 사용해서 연관된 테이블을 찾는다.
+               - 객  체: 참조를 사용해서 연관된 객체를 찾는다.
+               - 즉, 테이블과 객체 사이에는 이런 큰 간격이 있다.
+               - 객체지향 모델링하는 방법 → Member */
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
